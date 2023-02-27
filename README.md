@@ -52,7 +52,71 @@ AJAX学习的笔记，主要环境为Node.js
 
 同源策略（Same-Origin Policy）最早由 Netscape 公司提出，是浏览器的一种安全策略。
 
-同源：协议、域名、端口号 必须完全相同
+同源：协议、域名、端口号 必须完全相同：
+
+##### 客户端：
+
+```
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>首页</title>
+</head>
+<body>
+    <h1>Nliver</h1>
+    <button>点击获取用户数据</button>
+    <script>
+        const btn = document.querySelector('button');
+
+        btn.onclick = function(){
+            const x = new XMLHttpRequest();
+            //这里因为是满足同源策略的，所以url可以简写
+            x.open("GET",'/data');
+            //发送
+            x.send();
+            //
+            x.onreadystatechange = function () {
+                if (x.readyState === 4) {
+                    if(x.status >= 200 && x.status < 300){
+                        console.log(x.response);
+                    }
+
+                }
+            }
+        }
+    </script>
+</body>
+</html>
+```
+
+##### 服务端
+
+```服务端
+// const { response } = require('express');
+const express = require('express');
+
+const app = express();
+
+app.get('/home', (request, response)=>{
+    //响应一个页面
+    response.sendFile(__dirname + '/index.html');
+
+});
+
+app.get('/data', (request, response)=>{
+    //响应一个页面
+    response.send('用户数据');
+
+});
+
+app.listen(9000,()=>{
+    console.log("服务已经启动...");
+})
+```
+
+这里我们是响应了一个页面叫home我们要进入(http://127.0.0.1:9000/home) 这个地址才可以访问
 
 违背同源策略就是跨域
 
@@ -102,3 +166,12 @@ AJAX学习的笔记，主要环境为Node.js
       rounter.get("/testAJAX",function(req, res){
    
       })
+   
+   ### 调试用到的工具：
+   
+   nodemon 工具，自动修改服务端的数据，我们在修改服务端数据的时候经常修改，修改之后要重启很麻烦，下载这个工具会自动帮我们重启
+   
+       安装
+       npm install -g nodemon
+       使用
+       nodemon 你要执行的文件
