@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AJAX POST 请求</title>
+    <style>
+        #result{
+            width: 200px;
+            height: 100px;
+            border: solid 1px #903;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="result"></div>
+
+    <script>
+        const result=document.querySelector('#result');
+        result.addEventListener('mouseover',function(){
+            // 创建请求对象
+            const xhr=new XMLHttpRequest();
+            // 初始化
+            xhr.open('POST','http://127.0.0.1:8000/server');
+            // 设置请求头 Content-Type 设置请求体的类型 都是固定的写法
+            xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+            // 自定义请求头 自定义的话浏览器是会报错的因为没有这个规范，简单理解，上面是预定义的一些请求头，自定义的可能就会报错
+            // 但是可以在服务端里面自定义写一般都是后端会写的
+            xhr.setRequestHeader('name','ajie');
+            // 发送 post请求是可以传递参数的，可以向服务端发送一些数据
+            xhr.send('a=100&b=200&c=300');
+            // 请求体的参数写在这send方法里面
+            // 事件绑定
+            xhr.onreadystatechange=function(){
+                if(xhr.readyState===4){
+                    if(xhr.status>=200&&xhr.status<300){
+                        // 处理服务端结果
+                        result.innerHTML=xhr.response;
+                    }
+                }
+            }
+        })
+    </script>
+    <!-- <script>
+        //获取元素对象
+        const result = document.getElementById("result");
+        //绑定事件 鼠标移动到上面
+        result.addEventListener("mouseover", function(){
+            // console.log("test");
+            //1. 创建对象,发送请求
+            const xhr = new XMLHttpRequest();
+            //2. 初始化 设置请求类型与URL
+            xhr.open('POST','http://127.0.0.1:8000/server');
+            //设置请求头
+            xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+            //设置自定义请求头
+            xhr.setRequestHeader('name','superLmk');
+
+            //3.发送
+            xhr.send('a=100&b=200&c:300');
+            // xhr.send('a:100&b:200&c:300');
+            // xhr.send('123456654123');
+            //4. 事件绑定
+            xhr.onreadystatechange = function () {
+                //判断
+                if (xhr.readyState === 4) {
+                    if (xhr.status >= 200 && xhr.status < 300) { 
+                        //处理服务端返回的结果
+                        result.innerHTML = xhr.response;
+                    }
+                }
+            }
+        }) 
+    </script> -->
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IE缓存问题</title>
+    <style>
+        #result{
+            width: 200px;
+            height: 100px;
+            border: solid 1px #225588;
+        }
+    </style>
+</head>
+<body>
+    <button>点击发送请求</button>
+    <div id="result"></div>
+    <script>
+        const btn = document.getElementsByTagName('button')[0];
+        const result = document.querySelector('#result');
+
+        btn.addEventListener('click', function () {
+            // console.log('test');
+            //1. 创建ajax对象
+            const xhr = new XMLHttpRequest();
+            //2. 初始化请求
+            // 什么是缓存问题呢，当我们的响应体发生变化的时候ie浏览器是不能及时
+            // 得到响应的，它还是会拿上一次的数据，就会造成缓存问题，最好的办法
+            // 就是添加一个时间戳让url知道两次是不一样的就会发送两次请求
+            //AJAX解决IE缓存问题：加一个可变化的参数，比如时间戳
+            xhr.open('GET','http://127.0.0.1:8000/ie?t='+Date.now());
+            //3. 发送请求
+            xhr.send();
+            //4. 处理数据
+            xhr.onreadystatechange = function () {
+                //两个判断
+                if (xhr.readyState === 4) {
+                    if (xhr.status >= 200 && xhr.status < 300) {
+                        result.innerHTML = xhr.response;
+                        
+                    }
+                    
+                }
+                
+            }
+        })
+
+    </script> 
+</body>
+</html>
